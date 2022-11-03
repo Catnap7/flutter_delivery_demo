@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_study_2/common/view/splash_screen.dart';
 
 void main() {
-  runApp(_App());
+  runApp(
+    ProviderScope(
+      child: _App(),
+    ),
+  );
 }
 
 class _App extends StatelessWidget {
