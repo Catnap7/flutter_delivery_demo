@@ -10,22 +10,6 @@ import 'package:retrofit/retrofit.dart';
 
 part 'restaurant_repository.g.dart';
 
-/*
-
-  인스턴스화 안되게 abstract를 붙였음.
-  final resp = await dio.get(
-  'http://$ip/restaurant/$id',
-  options: Options(
-  headers: {
-  'authorization': 'Bearer $accessToken',
-  },
-  ),
-  );
-  return resp.data;
-  위 코드의 자동화를 위한 파일이며 레트로핏으로 구현함.
-
-*/
-
 final restaurantRepositoryProvider = Provider<RestaurantRepository>(
   (ref) {
     final dio = ref.watch(dioProvider);
