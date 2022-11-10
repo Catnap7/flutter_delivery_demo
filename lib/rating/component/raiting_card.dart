@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_study_2/common/const/colors.dart';
 
 class RatingCard extends StatelessWidget {
   // NetworkImage
@@ -63,6 +64,9 @@ class _Header extends StatelessWidget {
           radius: 12.0,
           backgroundImage: avatarImage,
         ),
+        const SizedBox(
+          width: 8.0,
+        ),
         Text(
           email,
           overflow: TextOverflow.ellipsis,
@@ -72,7 +76,13 @@ class _Header extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        ...List.generate(5, (index) => Icon(Icons.star)),
+        ...List.generate(
+          5,
+          (index) => Icon(
+            index < rating ? Icons.star : Icons.star_border_outlined,
+            color: PRIMARY_COLOR,
+          ),
+        ),
       ],
     );
   }
