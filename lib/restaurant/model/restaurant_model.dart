@@ -1,4 +1,5 @@
 import 'package:flutter_study_2/common/const/data.dart';
+import 'package:flutter_study_2/common/model/model_with_id.dart';
 import 'package:flutter_study_2/common/utils/data_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -11,7 +12,7 @@ enum RestaurantPriceRange {
 }
 
 @JsonSerializable()
-class RestaurantModel {
+class RestaurantModel implements IModelWithId {
   final String id;
   final String name;
   // thumbUrl은 http://$ip를 붙여서 사용해야 하므로,

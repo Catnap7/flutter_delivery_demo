@@ -29,7 +29,7 @@ class CursorPagination<T> extends CursorPaginationBase {
      CursorPaginationMeta? meta,
      List<T>? data,
 }){
-    return CursorPagination(
+    return CursorPagination<T>(
       meta: meta ?? this.meta,
       data: data ?? this.data,
     );
@@ -66,7 +66,7 @@ class CursorPaginationMeta {
 }
 
 // 새로고침 할때
-class CursorPaginationRefetching extends CursorPagination {
+class CursorPaginationRefetching<T> extends CursorPagination<T> {
   CursorPaginationRefetching({
     required super.meta,
     required super.data,
@@ -74,7 +74,7 @@ class CursorPaginationRefetching extends CursorPagination {
 }
 
 // 리스트 맨 끝에 도달했을 때 (추가 데이터 요청하는중)
-class CursorPaginationFetchingMore extends CursorPagination {
+class CursorPaginationFetchingMore<T> extends CursorPagination<T> {
   CursorPaginationFetchingMore({
     required super.meta,
     required super.data,

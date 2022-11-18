@@ -5,32 +5,29 @@ import 'package:flutter_study_2/common/dio/dio.dart';
 import 'package:flutter_study_2/common/model/cursor_pagination_model.dart';
 import 'package:flutter_study_2/common/model/pagination_params.dart';
 import 'package:flutter_study_2/common/reposiroty/base_pagination_repository.dart';
-import 'package:flutter_study_2/rating/model/rating_model.dart';
+import 'package:flutter_study_2/product/model/product_model.dart';
 import 'package:retrofit/retrofit.dart';
 
-part 'restaurant_rating_repository.g.dart';
+part 'product_repository.g.dart';
 
-final restaurantRatingRepositoryProvider =
-Provider.family<RestaurantRatingRepository, String>((ref, id) {
-  final dio = ref.watch(dioProvider);
+final productRepositoryProvider = Provider<ProductRepository>(
+        (ref){
+      final dio = ref.watch(dioProvider);
 
-  return RestaurantRatingRepository(
-    dio,
-    baseUrl: 'http://$ip/restaurant/$id/rating',
-  );
-});
+      return ProductRepository(dio, baseUrl: 'http://$ip/product');
+        }
+);
 
-// http://ip/restaurnt/:rid/rating
+// http://$ip/product
 @RestApi()
-abstract class RestaurantRatingRepository implements IBasePaginationRepository<RatingModel> {
-  factory RestaurantRatingRepository(Dio dio, {String baseUrl}) =
-  _RestaurantRatingRepository;
+abstract class ProductRepository implements IBasePaginationRepository<ProductModel> {
+  factory ProductRepository(Dio dio, {String baseUrl}) = _ProductRepository;
 
   @GET('/')
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<RatingModel>> paginate({
+ Future<CursorPagination<ProductModel>> paginate({
     @Queries() PaginationParams? paginationParams = const PaginationParams(),
   });
 }
