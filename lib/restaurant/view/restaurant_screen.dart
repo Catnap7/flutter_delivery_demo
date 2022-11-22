@@ -4,6 +4,7 @@ import 'package:flutter_study_2/restaurant/component/restaurant_card.dart';
 import 'package:flutter_study_2/restaurant/model/restaurant_model.dart';
 import 'package:flutter_study_2/restaurant/provider/restaurant_provider.dart';
 import 'package:flutter_study_2/restaurant/view/restaurant_detail_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class RestaurantScreen extends StatelessWidget {
   const RestaurantScreen({Key? key}) : super(key: key);
@@ -19,13 +20,9 @@ class RestaurantScreen extends StatelessWidget {
         ) {
           return GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => RestaurantDetailScreen(
-                    id: model.id,
-                  ),
-                ),
-              );
+              context.goNamed(RestaurantDetailScreen.routeName, params: {
+                'rid': model.id,
+              });
             },
             child: RestaurantCard.fromModel(
               model: model,

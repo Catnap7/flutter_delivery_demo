@@ -14,6 +14,7 @@ import 'package:flutter_study_2/restaurant/provider/restaurant_rating_provider.d
 import 'package:skeletons/skeletons.dart';
 
 class RestaurantDetailScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'restaurantDetail';
   final String id;
 
   const RestaurantDetailScreen({required this.id, Key? key}) : super(key: key);

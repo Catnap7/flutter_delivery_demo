@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_study_2/common/const/data.dart';
 import 'package:flutter_study_2/common/secure_storage/secure_storage.dart';
+import 'package:flutter_study_2/user/provider/auth_provider.dart';
 
 final dioProvider = Provider<Dio>((ref){
   final dio = Dio();
@@ -10,7 +11,7 @@ final dioProvider = Provider<Dio>((ref){
   final storage = ref.watch(secureStorageProvider);
 
   dio.interceptors.add(
-    CustomInterceptor(storage: storage),
+    CustomInterceptor(storage: storage,ref: ref),
   );
 
   return dio;
@@ -18,9 +19,11 @@ final dioProvider = Provider<Dio>((ref){
 
 class CustomInterceptor extends Interceptor {
   final FlutterSecureStorage storage;
+  final Ref ref;
 
   CustomInterceptor({
     required this.storage,
+    required this.ref,
   });
 
   // 1) 요청을 보낼때
@@ -119,7 +122,9 @@ class CustomInterceptor extends Interceptor {
         // 뭔가 문제가 생겼지만 에러가 안난것처럼 처리 가능
         return handler.resolve(response);
       } on DioError catch (e) {
-        return handler.reject(err);
+        ref.read(authProvider.notifier).logout();
+
+        return handler.reject(e);
       }
     }
     return handler.reject(err);

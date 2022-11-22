@@ -8,8 +8,12 @@ import 'package:flutter_study_2/common/layout/default_layout.dart';
 import 'package:flutter_study_2/common/secure_storage/secure_storage.dart';
 import 'package:flutter_study_2/common/view/root_tab.dart';
 import 'package:flutter_study_2/common/const/data.dart';
+import 'package:flutter_study_2/user/model/user_model.dart';
+import 'package:flutter_study_2/user/provider/user_me_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'login';
+
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -17,13 +21,13 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  String username = 'test@codefactory.ai';
-  String password = 'testtest';
+  String username = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
 
-    final dio = Dio();
+    final state = ref.watch(userMeProvider);
 
     return DefaultLayout(
       child: SingleChildScrollView(
@@ -61,7 +65,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () async {
+                  // 로그인 버튼 이미 눌러서 로그인중인데 로그인버튼 또 누르는것 방지
+                  onPressed: state is UserModelLoading ? null : () async {
+                    ref.read(userMeProvider.notifier).login(
+                          username: 'test@codefactory.ai',
+                          password: 'testtest',
+                        );
+
+                    /*
                     // ID:비밀번호
                     final rawString = 'test@codefactory.ai:testtest';
 
@@ -100,6 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         builder: (context) => RootTab(),
                       ),
                     );
+                    */
                   },
                   style: ElevatedButton.styleFrom(
                     primary: PRIMARY_COLOR,
@@ -112,9 +124,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-
-                  },
+                  onPressed: () {},
                   style: TextButton.styleFrom(
                     primary: PRIMARY_COLOR,
                     shape: RoundedRectangleBorder(
