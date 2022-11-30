@@ -42,8 +42,12 @@ dependencies:
   retrofit: '>=3.0.0 <4.0.0'
   logger: any #for logging purpose
   flutter_riverpod: ^2.1.1
+  # 리스트 값 받아올때 로딩중인것을 표현하기 위한 라이브러리
   skeletons: ^0.0.3
   go_router: ^5.1.7
+  badges: ^2.0.3
+  # 겹치지않는 고유의 id 생성기 (난수발생기)
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:

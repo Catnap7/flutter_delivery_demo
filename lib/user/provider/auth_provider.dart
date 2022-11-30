@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_study_2/common/view/root_tab.dart';
 import 'package:flutter_study_2/common/view/splash_screen.dart';
+import 'package:flutter_study_2/order/view/order_done_screen.dart';
+import 'package:flutter_study_2/restaurant/view/basket_screen.dart';
 import 'package:flutter_study_2/restaurant/view/restaurant_detail_screen.dart';
 import 'package:flutter_study_2/user/model/user_model.dart';
 import 'package:flutter_study_2/user/provider/user_me_provider.dart';
@@ -47,13 +49,23 @@ class AuthProvider extends ChangeNotifier {
           builder: (_, __) => SplashScreen(),
         ),
         GoRoute(
+          path: '/basket',
+          name: BasketScreen.routeName,
+          builder: (_, __) => BasketScreen(),
+        ),
+        GoRoute(
+          path: '/order_done',
+          name: OrderDoneScreen.routeName,
+          builder: (_, __) => OrderDoneScreen(),
+        ),
+        GoRoute(
           path: '/login',
           name: LoginScreen.routeName,
           builder: (_, __) => LoginScreen(),
         ),
       ];
 
-  void logout(){
+  void logout() {
     ref.read(userMeProvider.notifier).logOut();
   }
 
