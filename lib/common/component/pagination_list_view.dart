@@ -7,6 +7,7 @@ import 'package:flutter_study_2/common/utils/pagination_utils.dart';
 import 'package:flutter_study_2/restaurant/provider/restaurant_provider.dart';
 import 'package:logger/logger.dart';
 
+// TODO typedef 란 무엇인가?
 typedef PaginationWidgetBuilder<T extends IModelWithId> = Widget Function(
     BuildContext context, int index, T model);
 
@@ -94,39 +95,47 @@ class _PaginationListViewState<T extends IModelWithId>
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: ListView.separated(
-        controller: controller,
-        // 빙글빙글 추가하기 위해서 + 1 해준다
-        itemCount: state.data.length + 1,
-        itemBuilder: (_, index) {
-          if (index == cp.data.length) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Center(
-                child: cp is CursorPaginationFetchingMore
-                    ? CircularProgressIndicator()
-                    : Text("마지막 데이터입니다"),
-              ),
+      child: RefreshIndicator(
+        onRefresh: () async {
+           ref.read(widget.provider.notifier).paginate(
+                forceRefetch: true,
+              );
+        },
+        child: ListView.separated(
+          physics: AlwaysScrollableScrollPhysics(),
+          controller: controller,
+          // 빙글빙글 추가하기 위해서 + 1 해준다
+          itemCount: state.data.length + 1,
+          itemBuilder: (_, index) {
+            if (index == cp.data.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Center(
+                  child: cp is CursorPaginationFetchingMore
+                      ? CircularProgressIndicator()
+                      : Text("마지막 데이터입니다"),
+                ),
+              );
+            }
+
+            final pItem = cp.data[index];
+
+            return widget.itemBuilder(
+              context,
+              index,
+              pItem,
             );
-          }
-
-          final pItem = cp.data[index];
-
-          return widget.itemBuilder(
-            context,
-            index,
-            pItem,
-          );
-        },
-        // 각각의 아이템 사이사이에 들어가는 그림 그릴때 사용
-        separatorBuilder: (_, index) {
-          return const SizedBox(
-            height: 16.0,
-          );
-        },
+          },
+          // 각각의 아이템 사이사이에 들어가는 그림 그릴때 사용
+          separatorBuilder: (_, index) {
+            return const SizedBox(
+              height: 16.0,
+            );
+          },
+        ),
       ),
     );
   }

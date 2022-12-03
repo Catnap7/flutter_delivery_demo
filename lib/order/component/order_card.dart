@@ -20,14 +20,18 @@ class OrderCard extends StatelessWidget {
   factory OrderCard.fromModel({
     required OrderModel model,
   }) {
-    final productsDetail = model.products.length < 2 ?
-        model.products.first.product.name : '${model.products.first.product.name} 외 ${model.products.length - 1}개';
+    final productsDetail = model.products.length < 2
+        ? model.products.first.product.name
+        : '${model.products.first.product.name} 외 ${model.products.length - 1}개';
 
     return OrderCard(
       orderDate: model.createdAt,
-      image: Image.network(model.restaurant.thumbUrl, fit: BoxFit.cover,
-      width: 50,
-      height: 50,),
+      image: Image.network(
+        model.restaurant.thumbUrl,
+        fit: BoxFit.cover,
+        width: 50,
+        height: 50,
+      ),
       name: model.restaurant.name,
       productDetail: productsDetail,
       price: model.totalPrice,
@@ -37,11 +41,15 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // 2022.09.01
         // padLeft 길이 두자릿수의 빈 공간을 0으로 채움
         Text(
             '${orderDate.year}년 ${orderDate.month.toString().padLeft(2, '0')}월 ${orderDate.day.toString().padLeft(2, '0')}일 주문완료'),
+        const SizedBox(
+          height: 8.0,
+        ),
         Row(
           children: [
             ClipRRect(
@@ -52,6 +60,7 @@ class OrderCard extends StatelessWidget {
               width: 16.0,
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
