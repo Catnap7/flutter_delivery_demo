@@ -1,19 +1,50 @@
+import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_study_2/common/model/cursor_pagination_model.dart';
 import 'package:flutter_study_2/common/model/model_with_id.dart';
 import 'package:flutter_study_2/common/model/pagination_params.dart';
 import 'package:flutter_study_2/common/reposiroty/base_pagination_repository.dart';
 
+class _PaginationInfo {
+  final int fetchCount;
+  // 추가로 데이터 더 가져오기
+  // true - 추가로 데이터 더 가져옴
+  // false - 새로고침 (현재 상태를 덮어씌움)
+  final bool fetchMore;
+
+  // 강제로 다시 로딩하기
+  // true - CursorPaginationLoading()
+  final bool forceRefetch;
+
+  _PaginationInfo({
+    this.fetchCount = 20,
+    this.fetchMore = false,
+    this.forceRefetch = false,
+  });
+}
+
 class PaginationProvider<T extends IModelWithId,
         U extends IBasePaginationRepository<T>>
     extends StateNotifier<CursorPaginationBase> {
   final U repository;
+  final pagitnationThrothle = Throttle(
+     Duration(seconds: 5),
+    initialValue: _PaginationInfo(),
+    // 함수 실행할때 넣어주는 값이 똑같으면 실행하지 않는다. 지금은 false라서 매번 실행할때마다 쓰로틀링이 걸림
+    checkEquality: false,
+  );
 
   PaginationProvider({
     required this.repository,
-  }) : super(CursorPaginationLoading()){
+  }) : super(CursorPaginationLoading()) {
     paginate();
-}
+
+    // pagitnationThrothle에 리스너를 달아놨기 때문에 값이 들어오면 실행됨.
+    // 지금의 경우엔 paginate() 함수에 setValue를 해놨기 때문에 setValue가 실행되면 리스너도 실행됨.
+    pagitnationThrothle.values.listen((state) {
+      _throttledPagination(state);
+    });
+  }
 
   Future<void> paginate({
     int fetchCount = 20,
@@ -25,6 +56,18 @@ class PaginationProvider<T extends IModelWithId,
     // true - CursorPaginationLoading()
     bool forceRefetch = false,
   }) async {
+    // setValue만 해둬도 쓰로틀을 통해서 _throttledPagination실행하게함
+    pagitnationThrothle.setValue(_PaginationInfo(
+      fetchMore: fetchMore,
+      forceRefetch: forceRefetch,
+      fetchCount: fetchCount,
+    ));
+  }
+
+  _throttledPagination(_PaginationInfo info) async {
+    final fetchCount = info.fetchCount;
+    final fetchMore = info.fetchMore;
+    final forceRefetch = info.forceRefetch;
     try {
       // 5가지 가능성
       // State의 상태

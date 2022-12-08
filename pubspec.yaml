@@ -48,6 +48,10 @@ dependencies:
   badges: ^2.0.3
   # 겹치지않는 고유의 id 생성기 (난수발생기)
   uuid: ^3.0.7
+  # 이벤트가 트리거되어 요청이 들어왔을때
+  # 첫 번째 요청을 처리하고나서 정해진 기간동안 이벤트 요청을 무시 -> (쓰로틀)
+  # 맨 마지막 요청만 처리하고 싶을때 -> (디바운스)
+  debounce_throttle: ^2.0.0
 
 dev_dependencies:
   flutter_test:
